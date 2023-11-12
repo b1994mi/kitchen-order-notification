@@ -1,0 +1,3 @@
+export const ORDER_CONSUMER = 'ORDER';
+export const ORDER_KITCHEN = 'KITCHEN';
+export const ORDER_NOTIFICATION = 'NOTIFICATION';
