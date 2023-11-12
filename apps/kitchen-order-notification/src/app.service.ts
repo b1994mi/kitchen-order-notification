@@ -6,6 +6,7 @@ import { CreateOrderDto } from './order.dto';
 import { Order, OrderStatus } from '@app/common/order.entity';
 import { Food } from '@app/common/food.entity';
 import { DataSource, Repository } from 'typeorm';
+import { BadRequestErr, NotFoundErr } from '@app/common';
 
 @Injectable()
 export class AppService {
@@ -14,6 +15,8 @@ export class AppService {
   constructor(
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
+    @InjectRepository(Food)
+    private foodsRepository: Repository<Food>,
     private dataSource: DataSource,
     @Inject(ORDER_KITCHEN) private orderKitchenClient: ClientProxy,
     @Inject(ORDER_NOTIFICATION) private orderNotificationClient: ClientProxy,
@@ -65,5 +68,25 @@ export class AppService {
 
     await this.ordersRepository.save(o);
     return;
+  }
+
+  async getFoodList(): Promise<any> {
+    return this.foodsRepository.find();
+  }
+
+  async getOrderDetail(id: number): Promise<any> {
+    if (Number.isNaN(id)) {
+      return new BadRequestErr();
+    }
+
+    const order = await this.ordersRepository.findOne({
+      where: { id },
+    });
+
+    if (!order) {
+      return new NotFoundErr();
+    }
+
+    return order;
   }
 }

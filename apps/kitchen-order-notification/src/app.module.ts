@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AppService } from './app.service';
 import { Module } from '@nestjs/common';
-import { RmqModule } from '@app/common';
+import { Food, RmqModule } from '@app/common';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { RmqModule } from '@app/common';
       isGlobal: true,
     }),
     TormModule.register(),
-    TypeOrmModule.forFeature([Order]),
+    TypeOrmModule.forFeature([Order, Food]),
     RmqModule,
     RmqModule.register({
       name: ORDER_KITCHEN,
