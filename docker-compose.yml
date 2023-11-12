@@ -1,0 +1,55 @@
+services:
+  mysql:
+    image: mysql:latest
+    ports:
+    - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: test
+    networks:
+    - resolute
+
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+    - 5672:5672
+    - 15672:15672
+    networks:
+    - resolute
+
+  app-order:
+    build:
+      context: .
+      dockerfile: ./apps/kitchen-order-notification/Dockerfile
+    ports:
+    - 3000:3000
+    depends_on:
+    - mysql
+    - rabbitmq
+    networks:
+    - resolute
+
+  app-kitchen:
+    build:
+      context: .
+      dockerfile: ./apps/kitchen/Dockerfile
+    depends_on:
+    - rabbitmq
+    networks:
+    - resolute
+
+  app-notification:
+    build:
+      context: .
+      dockerfile: ./apps/notification/Dockerfile
+    depends_on:
+    - rabbitmq
+    networks:
+    - resolute
+
+networks:
+  resolute:
+    external:
+      name: resolute
