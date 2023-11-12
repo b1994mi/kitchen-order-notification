@@ -8,7 +8,13 @@ An example NestJS app monorepo using Rabbit MQ
 
 Note: you probably need to use sudo for all the command above, assuming that you did not setup a new user group (like I do).
 
-TODO: create a diagram of how the messages are emitted and consumed
+## Architecture Diagram
+
+The main application is kitchen-order-notification (OrderService). The two other apps, kitchen (KitchenService) and notification (NotificationService), are just a micro service that are not connected to mysql database. This is due to the nature of micro services, they only communicate with each other and have their own databases. 
+
+When an order is placed by the client to OrderService, it emits two message for kitchen and notification apps to consume. After that, the KitchenService emits another message so that the main app (OrderService) can make changes to the database.
+
+![diagram](https://raw.githubusercontent.com/b1994mi/kitchen-order-notification/main/kitchen-order-notification.drawio.png)
 
 ## Endpoints Documentation
 
